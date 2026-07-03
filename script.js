@@ -1,57 +1,30 @@
 
-/*=========================================================
-BRACES 'N FACES DENTAL CARE
-COMPLETE PREMIUM SCRIPT.JS
-GSAP • INTERACTIONS • ANIMATIONS • UI LOGIC
-=========================================================*/
+/* =========================
+PREMIUM DENTAL WEBSITE JS
+BRACES 'N FACES
+========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-/*=========================
-PRELOADER
-=========================*/
-
-const preloader = document.querySelector(".preloader");
-
-window.addEventListener("load", () => {
-    if (preloader) {
-        preloader.classList.add("hide");
-    }
-});
-
-/*=========================
-NAVBAR SCROLL EFFECT
-=========================*/
-
-const navbar = document.querySelector(".navbar");
-
-window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-        navbar.style.background = "rgba(255,255,255,0.9)";
-        navbar.style.backdropFilter = "blur(20px)";
-        navbar.style.boxShadow = "0 10px 30px rgba(0,0,0,0.08)";
-    } else {
-        navbar.style.background = "rgba(255,255,255,0.75)";
-        navbar.style.boxShadow = "none";
-    }
-});
-
-/*=========================
+/* =========================
 MOBILE MENU
-=========================*/
+========================= */
 
-const mobileMenu = document.querySelector(".mobile-menu");
 const nav = document.querySelector(".navbar nav");
 
-if (mobileMenu) {
-    mobileMenu.addEventListener("click", () => {
-        nav.classList.toggle("active");
-    });
-}
+const menuToggle = document.createElement("div");
+menuToggle.innerHTML = "☰";
+menuToggle.classList.add("menu-toggle");
 
-/*=========================
+document.querySelector(".navbar .container").appendChild(menuToggle);
+
+menuToggle.addEventListener("click", () => {
+    nav.classList.toggle("active");
+});
+
+/* =========================
 SMOOTH SCROLL
-=========================*/
+========================= */
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener("click", function (e) {
@@ -67,36 +40,45 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-/*=========================
-FAQ ACCORDION
-=========================*/
+/* =========================
+NAVBAR GLASS ON SCROLL
+========================= */
 
-const faqs = document.querySelectorAll(".faq-item");
+const navbar = document.querySelector(".navbar .container");
 
-faqs.forEach(faq => {
-    const question = faq.querySelector(".faq-question");
-    const answer = faq.querySelector(".faq-answer");
-
-    question.addEventListener("click", () => {
-
-        faqs.forEach(item => {
-            if (item !== faq) {
-                item.querySelector(".faq-answer").style.maxHeight = null;
-            }
-        });
-
-        if (answer.style.maxHeight) {
-            answer.style.maxHeight = null;
-        } else {
-            answer.style.maxHeight = answer.scrollHeight + "px";
-        }
-
-    });
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 50) {
+        navbar.style.background = "rgba(255,255,255,0.9)";
+        navbar.style.backdropFilter = "blur(20px)";
+    } else {
+        navbar.style.background = "rgba(255,255,255,0.7)";
+    }
 });
 
-/*=========================
+/* =========================
+SCROLL REVEAL ANIMATION
+========================= */
+
+const revealElements = document.querySelectorAll(".card, .doctor, .split img, .hero-left");
+
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+        }
+    });
+}, {
+    threshold: 0.15
+});
+
+revealElements.forEach(el => {
+    el.classList.add("reveal");
+    revealObserver.observe(el);
+});
+
+/* =========================
 COUNTER ANIMATION
-=========================*/
+========================= */
 
 const counters = document.querySelectorAll("[data-count]");
 
@@ -124,80 +106,34 @@ const counterObserver = new IntersectionObserver(entries => {
             counterObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.5 });
+}, {
+    threshold: 0.5
+});
 
 counters.forEach(counter => counterObserver.observe(counter));
 
-/*=========================
-REVEAL ON SCROLL
-=========================*/
+/* =========================
+FAQ (IF EXISTS)
+========================= */
 
-const revealElements = document.querySelectorAll(".reveal, .service-card, .why-card, .doctor-card, .review-card");
-
-const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = 1;
-            entry.target.style.transform = "translateY(0)";
-        }
-    });
-}, { threshold: 0.2 });
-
-revealElements.forEach(el => {
-    el.style.opacity = 0;
-    el.style.transform = "translateY(40px)";
-    el.style.transition = "0.6s ease";
-    revealObserver.observe(el);
-});
-
-/*=========================
-CURSOR EFFECT
-=========================*/
-
-const cursor = document.querySelector(".cursor-glow");
-
-if (cursor) {
-    document.addEventListener("mousemove", (e) => {
-        cursor.style.left = e.clientX + "px";
-        cursor.style.top = e.clientY + "px";
-    });
-
-    document.querySelectorAll("a, button, .btn").forEach(el => {
-        el.addEventListener("mouseenter", () => {
-            cursor.classList.add("active");
-        });
-
-        el.addEventListener("mouseleave", () => {
-            cursor.classList.remove("active");
-        });
-    });
-}
-
-/*=========================
-PARALLAX EFFECT
-=========================*/
-
-window.addEventListener("scroll", () => {
-    const parallax = document.querySelectorAll(".hero img, .parallax");
-
-    let scroll = window.pageYOffset;
-
-    parallax.forEach(el => {
-        el.style.transform = `translateY(${scroll * 0.2}px)`;
+document.querySelectorAll(".faq-item").forEach(item => {
+    item.addEventListener("click", () => {
+        item.classList.toggle("active");
     });
 });
 
-/*=========================
+/* =========================
 BUTTON RIPPLE EFFECT
-=========================*/
+========================= */
 
 document.querySelectorAll(".btn").forEach(btn => {
     btn.addEventListener("click", function (e) {
 
-        const ripple = document.createElement("span");
+        let ripple = document.createElement("span");
+
         ripple.classList.add("ripple");
 
-        const rect = btn.getBoundingClientRect();
+        const rect = this.getBoundingClientRect();
 
         ripple.style.left = (e.clientX - rect.left) + "px";
         ripple.style.top = (e.clientY - rect.top) + "px";
@@ -211,35 +147,64 @@ document.querySelectorAll(".btn").forEach(btn => {
     });
 });
 
-/*=========================
-GSAP (OPTIONAL IF LOADED)
-=========================*/
+/* =========================
+GSAP (OPTIONAL - IF LOADED)
+========================= */
 
 if (typeof gsap !== "undefined") {
 
-    gsap.from(".hero h1", {
-        opacity: 0,
+    gsap.from(".hero-left h1", {
         y: 50,
+        opacity: 0,
         duration: 1
     });
 
-    gsap.from(".hero p", {
-        opacity: 0,
+    gsap.from(".hero-left p", {
         y: 30,
-        delay: 0.3
+        opacity: 0,
+        delay: 0.2
     });
 
-    gsap.from(".service-card", {
-        scrollTrigger: ".services",
+    gsap.from(".card", {
         opacity: 0,
         y: 40,
-        stagger: 0.1
+        stagger: 0.05,
+        duration: 0.8
     });
 
 }
 
-/*=========================
+/* =========================
+FLOAT ANIMATION (SOFT UI MOVE)
+========================= */
+
+const floatElements = document.querySelectorAll(".card, .doctor");
+
+floatElements.forEach(el => {
+    el.addEventListener("mousemove", (e) => {
+
+        const rect = el.getBoundingClientRect();
+
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        el.style.transform = `
+            perspective(1000px)
+            rotateX(${(y - rect.height/2)/20}deg)
+            rotateY(${-(x - rect.width/2)/20}deg)
+            scale(1.02)
+        `;
+
+    });
+
+    el.addEventListener("mouseleave", () => {
+        el.style.transform = "none";
+    });
+
+});
+
+/* =========================
 END
-=========================*/
+========================= */
 
 });
